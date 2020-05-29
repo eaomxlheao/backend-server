@@ -25,3 +25,6 @@ mongoose
 subir a repositorio
 	git init
 	git add .
+	git commit -m "Carga inicial"
+	git remote add origin https://github.com/eaomxlheao/backend-server.git
+	git push -u origin master
