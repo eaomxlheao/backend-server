@@ -1,0 +1,27 @@
+Crear carpeta de proyecto backend
+
+npm init	
+
+express.js
+	npm install express --save
+
+crear archivo app.js
+	node app --ejecuta el servidor
+
+nodemon --Para evitar recargar el server
+	sudo npm install -g nodemon
+
+mongodb
+	sudo apt update
+	sudo apt install mongodb
+
+	ejecutar
+		mongo
+
+mongoose
+	npm install mongoose --save
+
+
+subir a repositorio
+	git init
+	git add .
