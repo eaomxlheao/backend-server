@@ -28,3 +28,5 @@ subir a repositorio
 	git commit -m "Carga inicial"
 	git remote add origin https://github.com/eaomxlheao/backend-server.git
 	git push -u origin master
+	git tag -a v0.0.1 -m "Inicio"
+	git push --tags
