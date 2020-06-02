@@ -40,7 +40,7 @@ app.post("/", (request, response) => {
 
     usuario.save((err, usuarioGuardado) => {
         if (err) {
-            return response.status(500).json({
+            return response.status(400).json({
                 ok: true,
                 message: "Error al crear usuario!",
                 errors: err,
