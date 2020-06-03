@@ -1,4 +1,5 @@
 var express = require("express");
+var bcrypt = require("bcrypt");
 
 var app = express();
 
@@ -30,10 +31,11 @@ app.get("/", (request, response, next) => {
 ///===============================================
 app.post("/", (request, response) => {
     var body = request.body;
+
     var usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: body.password,
+        password: bcrypt.hashSync(body.password, 10),
         imagen: body.imagen,
         role: body.role,
     });
