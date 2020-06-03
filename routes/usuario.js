@@ -105,4 +105,33 @@ app.post("/", (request, response) => {
     });
 });
 
+///===============================================
+/// Borrar usuario
+///===============================================
+app.delete("/:id", (request, response) => {
+    var id = request.params.id;
+    Usuario.findByIdAndDelete(id, (err, usuarioBorrado) => {
+        if (err) {
+            return response.status(500).json({
+                ok: true,
+                message: "Error al borrar usuario!",
+                errors: err,
+            });
+        }
+
+        if (!usuarioBorrado) {
+            return response.status(401).json({
+                ok: true,
+                message: "El usuario con el id: " + id + " no existe!",
+                errors: { message: "No existe usuario con ese ID" },
+            });
+        }
+
+        return response.status(200).json({
+            ok: true,
+            usuario: usuarioBorrado,
+        });
+    });
+});
+
 module.exports = app;
