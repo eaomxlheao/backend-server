@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 //Importing routes
 var appRoutes = require("./routes/app");
 var usuarioRoutes = require("./routes/usuario");
+var loginRoutes = require("./routes/login");
 
 //DB Connection
 mongoose.connection.openUri(
@@ -29,6 +30,7 @@ mongoose.connection.openUri(
 //Routes
 app.use("/", appRoutes);
 app.use("/usuario", usuarioRoutes);
+app.use("/login", loginRoutes);
 
 //listening for requestst
 app.listen(3000, function() {
