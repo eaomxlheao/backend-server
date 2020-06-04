@@ -14,6 +14,8 @@ app.use(bodyParser.json());
 var appRoutes = require("./routes/app");
 var usuarioRoutes = require("./routes/usuario");
 var loginRoutes = require("./routes/login");
+var hospitalRoutes = require("./routes/hospital");
+var medicoRoutes = require("./routes/medico");
 
 //DB Connection
 mongoose.connection.openUri(
@@ -31,6 +33,8 @@ mongoose.connection.openUri(
 app.use("/", appRoutes);
 app.use("/usuario", usuarioRoutes);
 app.use("/login", loginRoutes);
+app.use("/hospital", hospitalRoutes);
+app.use("/medico", medicoRoutes);
 
 //listening for requestst
 app.listen(3000, function() {

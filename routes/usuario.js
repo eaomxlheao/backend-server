@@ -17,14 +17,14 @@ app.get("/", (request, response, next) => {
     Usuario.find({}, "nombre email imagen role").exec((err, usuarios) => {
         if (err) {
             return response.status(500).json({
-                ok: true,
+                ok: false,
                 message: "Error cargando usuarios!",
                 errors: err,
             });
         }
         return response.status(200).json({
             ok: true,
-            usuarios: usuarios,
+            usuario: usuarios,
         });
     });
 });
@@ -39,7 +39,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (request, response) => {
     Usuario.findById(id, (err, usuario) => {
         if (err) {
             return response.status(500).json({
-                ok: true,
+                ok: false,
                 message: "Error al buscar usuario!",
                 errors: err,
             });
@@ -47,7 +47,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (request, response) => {
 
         if (!usuario) {
             return response.status(401).json({
-                ok: true,
+                ok: false,
                 message: "El usuario con el id: " + id + " no existe!",
                 errors: { message: "No existe usuario con ese ID" },
             });
@@ -99,6 +99,8 @@ app.post("/", mdAutenticacion.verificaToken, (request, response) => {
                 errors: err,
             });
         }
+
+        usuarioGuardado.password = ":)";
 
         //201=>Created
         return response.status(201).json({
