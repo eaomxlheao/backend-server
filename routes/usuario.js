@@ -1,8 +1,9 @@
 var express = require("express");
 var bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
-var SEED = require("../config/config").SEED;
 
+//Middlewares
+var mdAutenticacion = require("../middlewares/autenticacion");
 var app = express();
 
 var Usuario = require("../models/usuarios");
@@ -29,28 +30,9 @@ app.get("/", (request, response, next) => {
 });
 
 ///===============================================
-/// Verificar token
-///===============================================
-app.use("/", (request, response, next) => {
-    var token = request.query.token;
-
-    jwt.verify(token, SEED, (err, decoded) => {
-        if (err) {
-            return response.status(401).json({
-                ok: true,
-                message: "Token incorrecto!",
-                errors: err,
-            });
-        }
-    });
-
-    next();
-});
-
-///===============================================
 /// Actualizar usuario
 ///===============================================
-app.put("/:id", (request, response) => {
+app.put("/:id", mdAutenticacion.verificaToken, (request, response) => {
     var id = request.params.id;
     var body = request.body;
 
@@ -98,7 +80,7 @@ app.put("/:id", (request, response) => {
 ///===============================================
 /// Crear usuario
 ///===============================================
-app.post("/", (request, response) => {
+app.post("/", mdAutenticacion.verificaToken, (request, response) => {
     var body = request.body;
 
     var usuario = new Usuario({
@@ -129,7 +111,7 @@ app.post("/", (request, response) => {
 ///===============================================
 /// Borrar usuario
 ///===============================================
-app.delete("/:id", (request, response) => {
+app.delete("/:id", mdAutenticacion.verificaToken, (request, response) => {
     var id = request.params.id;
     Usuario.findByIdAndDelete(id, (err, usuarioBorrado) => {
         if (err) {
