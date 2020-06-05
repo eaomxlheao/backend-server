@@ -12,19 +12,21 @@ var Hospital = require("../models/hospital");
 /// Obtener todos los hospitales
 ///===============================================
 app.get("/", (request, response, next) => {
-    Hospital.find({}).exec((err, hospitales) => {
-        if (err) {
-            return response.status(500).json({
-                ok: false,
-                message: "Error cargando hospitales!",
-                errors: err,
+    Hospital.find({})
+        .populate("usuario", "nombre email")
+        .exec((err, hospitales) => {
+            if (err) {
+                return response.status(500).json({
+                    ok: false,
+                    message: "Error cargando hospitales!",
+                    errors: err,
+                });
+            }
+            return response.status(200).json({
+                ok: true,
+                hospitales: hospitales,
             });
-        }
-        return response.status(200).json({
-            ok: true,
-            hospitales: hospitales,
         });
-    });
 });
 
 ///===============================================
