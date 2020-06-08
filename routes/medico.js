@@ -12,7 +12,12 @@ var Medico = require("../models/medico");
 /// Obtener todos los medicos
 ///===============================================
 app.get("/", (request, response, next) => {
+    var desde = request.query.desde || 0;
+    desde = Number(desde);
+
     Medico.find({})
+        .skip(desde)
+        .limit(5)
         .populate("usuario", "nombre email")
         .populate("hospital")
         .exec((err, medicos) => {
@@ -23,9 +28,13 @@ app.get("/", (request, response, next) => {
                     errors: err,
                 });
             }
-            return response.status(200).json({
-                ok: true,
-                medicos: medicos,
+
+            Medico.count({}, (err, conteo) => {
+                return response.status(200).json({
+                    ok: true,
+                    total: conteo,
+                    medicos: medicos,
+                });
             });
         });
 });
