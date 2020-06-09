@@ -31,6 +31,12 @@ mongoose.connection.openUri(
     }
 );
 
+//Esto es por si se quiere ver el folder uploads por una peticion get
+//Server Index Configuracion
+//var serveIndex = require("serve-index");
+//app.use(express.static(__dirname + "/"));
+//app.use("/uploads", serveIndex(__dirname + "/uploads"));
+
 //Routes
 app.use("/", appRoutes);
 app.use("/usuario", usuarioRoutes);
