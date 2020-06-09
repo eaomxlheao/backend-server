@@ -6,7 +6,7 @@ var jwt = require("jsonwebtoken");
 var mdAutenticacion = require("../middlewares/autenticacion");
 var app = express();
 
-var Usuario = require("../models/usuarios");
+var Usuario = require("../models/usuario");
 
 //Routes
 
@@ -70,7 +70,7 @@ app.put("/:id", mdAutenticacion.verificaToken, (request, response) => {
         usuario.save((err, usuarioGuardado) => {
             if (err) {
                 return response.status(400).json({
-                    ok: true,
+                    ok: false,
                     message: "Error al actualizar usuario!",
                     errors: err,
                 });

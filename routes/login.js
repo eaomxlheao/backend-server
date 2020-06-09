@@ -5,7 +5,7 @@ var SEED = require("../config/config").SEED;
 
 var app = express();
 
-var Usuario = require("../models/usuarios");
+var Usuario = require("../models/usuario");
 
 //Routes
 
