@@ -45,10 +45,69 @@ app.post("/google", async(request, response) => {
         });
     });
 
-    return response.status(200).json({
-        ok: true,
-        message: "Peticion realizada correctamente",
-        googleUser: googleUser,
+    Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
+        if (err) {
+            return response.status(500).json({
+                ok: false,
+                message: "Error al buscar usuario!",
+                errors: err,
+            });
+        }
+
+        if (usuarioDB) {
+            if (!usuarioDB.google) {
+                return response.status(400).json({
+                    ok: false,
+                    message: "Debe usar autenticacion normal!",
+                    errors: err,
+                });
+            } else {
+                //Crear token
+                usuarioDB.password = ":)";
+                var token = jwt.sign({ usuario: usuarioDB }, SEED, {
+                    expiresIn: 1800,
+                }); //30 mins
+
+                //el token se puede validar en jwt.io
+                return response.status(200).json({
+                    ok: true,
+                    message: "Desde Autenticacion google",
+                    usuario: usuarioBD,
+                    token: token,
+                });
+            }
+        } else {
+            //Usuario no existe hay que crearlo
+            var usuario = new Usuario({
+                nombre: googleUser.nombre,
+                email: googleUser.email,
+                password: ":)",
+                imagen: googleUser.imagen,
+                google: true,
+            });
+
+            usuario.save((err, usuarioBD) => {
+                if (err) {
+                    return response.status(400).json({
+                        ok: false,
+                        message: "Error al crear usuario!",
+                        errors: err,
+                    });
+                }
+
+                var token = jwt.sign({ usuario: usuarioBD }, SEED, {
+                    expiresIn: 1800,
+                }); //30 mins
+
+                //el token se puede validar en jwt.io
+                return response.status(200).json({
+                    ok: true,
+                    message: "Desde Autenticacion google",
+                    usuario: usuarioBD,
+                    token: token,
+                });
+            });
+        }
     });
 });
 
@@ -61,7 +120,7 @@ app.post("/", (request, response) => {
     Usuario.findOne({ email: body.email }, (err, usuarioBD) => {
         if (err) {
             return response.status(500).json({
-                ok: true,
+                ok: false,
                 message: "Error al buscar usuario!",
                 errors: err,
             });
@@ -69,7 +128,7 @@ app.post("/", (request, response) => {
 
         if (!usuarioBD) {
             return response.status(400).json({
-                ok: true,
+                ok: false,
                 message: "Credenciales incorrectas!",
                 errors: err,
             });
@@ -77,7 +136,7 @@ app.post("/", (request, response) => {
 
         if (!bcrypt.compareSync(body.password, usuarioBD.password)) {
             return response.status(400).json({
-                ok: true,
+                ok: false,
                 message: "Credenciales incorrectas!",
                 errors: err,
             });
