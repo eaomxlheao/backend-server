@@ -34,3 +34,7 @@ subir a repositorio
 google-signin es un proyecto aparte para probar credenciales de googgle,
  debe de ir en una carpeta al mismo nivel de backend-server.
  Se ejecuta con: npm run dev
+
+
+ CORS
+ revisar esta pagina: https://expressjs.com/en/resources/middleware/cors.html#installation
