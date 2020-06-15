@@ -64,6 +64,7 @@ app.post("/google", async(request, response) => {
             } else {
                 //Crear token
                 usuarioDB.password = ":)";
+                usuarioDB.imagen = googleUser.imagen;
                 var token = jwt.sign({ usuario: usuarioDB }, SEED, {
                     expiresIn: 1800,
                 }); //30 mins
