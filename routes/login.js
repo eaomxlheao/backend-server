@@ -72,7 +72,7 @@ app.post("/google", async(request, response) => {
                 return response.status(200).json({
                     ok: true,
                     message: "Desde Autenticacion google",
-                    usuario: usuarioBD,
+                    usuario: usuarioDB,
                     token: token,
                 });
             }
