@@ -25,10 +25,10 @@ app.get("/coleccion/:tabla/:buscar", (request, response) => {
             promesa = buscarUsuarios(busqueda, regex);
             break;
         case "hospitales":
-            promesa = buscarUsuarios(busqueda, regex);
+            promesa = buscarHospitales(busqueda, regex);
             break;
         case "medicos":
-            promesa = buscarUsuarios(busqueda, regex);
+            promesa = buscarMedicos(busqueda, regex);
             break;
         default:
             return response.status(400).json({

@@ -13,7 +13,7 @@ app.use(function(req, res, next) {
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept, Token"
     );
-    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELTE, OPTIONS");
+    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
     next();
 });
 

@@ -17,7 +17,7 @@ app.get("/", (request, response, next) => {
     Hospital.find({})
         .skip(desde)
         .limit(5)
-        .populate("usuario", "nombre email")
+        .populate("usuario", "nombre email imagen")
         .exec((err, hospitales) => {
             if (err) {
                 return response.status(500).json({
@@ -119,10 +119,41 @@ app.delete("/:id", mdAutenticacion.verificaToken, (request, response) => {
             });
         }
         return response.status(200).json({
-            ok: ok,
+            ok: true,
             hospital: hospitalBorrado,
         });
     });
+});
+
+///===============================================
+/// Obetener hospital por Id
+///===============================================
+app.get("/:id", (request, response) => {
+    let id = request.params.id;
+    Hospital.findById(id)
+        .populate("usuario", "nombre imagen email")
+        .exec((err, hospitalDB) => {
+            if (err) {
+                return response.status(500).json({
+                    ok: false,
+                    message: "Error al obtenel el hospital!",
+                    errres: err,
+                });
+            }
+
+            if (!hospitalDB) {
+                return response.status(401).json({
+                    ok: false,
+                    message: "No existe hospital con ese ID!",
+                    errors: { message: "No existe usuario con ese ID" },
+                });
+            }
+
+            return response.status(401).json({
+                ok: false,
+                hospital: hospitalDB,
+            });
+        });
 });
 
 module.exports = app;
