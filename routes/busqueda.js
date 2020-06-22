@@ -49,7 +49,7 @@ app.get("/coleccion/:tabla/:buscar", (request, response) => {
 /// Busqueda General
 ///===============================================
 app.get("/todo/:buscar", (request, response, next) => {
-    var busqueda = request.query.buscar;
+    var busqueda = request.params.buscar;
 
     //Regular Expression, case insensitive
     var regex = new RegExp(busqueda, "i");
