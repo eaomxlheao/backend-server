@@ -149,8 +149,8 @@ app.get("/:id", (request, response) => {
                 });
             }
 
-            return response.status(401).json({
-                ok: false,
+            return response.status(200).json({
+                ok: true,
                 hospital: hospitalDB,
             });
         });

@@ -5,6 +5,7 @@ var mdAutenticacion = require("../middlewares/autenticacion");
 var app = express();
 
 var Medico = require("../models/medico");
+const { response } = require("express");
 
 //Routes
 
@@ -123,10 +124,42 @@ app.delete("/:id", mdAutenticacion.verificaToken, (request, response) => {
             });
         }
         return response.status(200).json({
-            ok: ok,
+            ok: true,
             medico: medicoBorrado,
         });
     });
+});
+
+///===============================================
+/// Obtener medico por ID
+///===============================================
+app.get("/:id", (request, response) => {
+    var id = request.params.id;
+    Medico.findById(id)
+        .populate("usuario", "nombre email")
+        .populate("hospital")
+        .exec((err, medicoBD) => {
+            if (err) {
+                return response.status(500).json({
+                    ok: false,
+                    mensaje: "Error al obtener medico por ID",
+                    errors: err,
+                });
+            }
+
+            if (!medicoBD) {
+                return response.status(400).json({
+                    ok: false,
+                    mensaje: "No existe un medico con ese ID",
+                    errors: { error: "No existe un medico con ese ID" },
+                });
+            }
+
+            return response.status(200).json({
+                ok: true,
+                medico: medicoBD,
+            });
+        });
 });
 
 module.exports = app;
