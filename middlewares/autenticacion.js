@@ -10,7 +10,7 @@ exports.verificaToken = function(request, response, next) {
     jwt.verify(token, SEED, (err, decoded) => {
         if (err) {
             return response.status(401).json({
-                ok: true,
+                ok: false,
                 message: "Token incorrecto!",
                 errors: err,
             });
@@ -19,4 +19,21 @@ exports.verificaToken = function(request, response, next) {
         request.usuario = decoded.usuario;
         next();
     });
+};
+
+///===============================================
+/// Verificar ADMIN
+///===============================================
+exports.verificaAdminRole = function(request, response, next) {
+    var usuario = request.usuario;
+    if (usuario.role === "ADMIN_ROLE") {
+        next();
+        return;
+    } else {
+        return response.status(401).json({
+            ok: false,
+            message: "Token incorrecto!",
+            errors: { message: "Token incorrecto!" },
+        });
+    }
 };

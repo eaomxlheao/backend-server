@@ -42,50 +42,53 @@ app.get("/", (request, response, next) => {
 ///===============================================
 /// Actualizar usuario
 ///===============================================
-app.put("/:id", mdAutenticacion.verificaToken, (request, response) => {
-    var id = request.params.id;
-    var body = request.body;
+app.put(
+    "/:id", [mdAutenticacion.verificaToken, mdAutenticacion.verificaAdminRole],
+    (request, response) => {
+        var id = request.params.id;
+        var body = request.body;
 
-    Usuario.findById(id, (err, usuario) => {
-        if (err) {
-            return response.status(500).json({
-                ok: false,
-                message: "Error al buscar usuario!",
-                errors: err,
-            });
-        }
-
-        if (!usuario) {
-            return response.status(401).json({
-                ok: false,
-                message: "El usuario con el id: " + id + " no existe!",
-                errors: { message: "No existe usuario con ese ID" },
-            });
-        }
-
-        usuario.nombre = body.nombre;
-        usuario.email = body.email;
-        usuario.role = body.role;
-
-        usuario.save((err, usuarioGuardado) => {
+        Usuario.findById(id, (err, usuario) => {
             if (err) {
-                return response.status(400).json({
+                return response.status(500).json({
                     ok: false,
-                    message: "Error al actualizar usuario!",
+                    message: "Error al buscar usuario!",
                     errors: err,
                 });
             }
 
-            usuarioGuardado.password = ":)";
+            if (!usuario) {
+                return response.status(401).json({
+                    ok: false,
+                    message: "El usuario con el id: " + id + " no existe!",
+                    errors: { message: "No existe usuario con ese ID" },
+                });
+            }
 
-            //201=>Created
-            return response.status(200).json({
-                ok: true,
-                usuario: usuarioGuardado,
+            usuario.nombre = body.nombre;
+            usuario.email = body.email;
+            usuario.role = body.role;
+
+            usuario.save((err, usuarioGuardado) => {
+                if (err) {
+                    return response.status(400).json({
+                        ok: false,
+                        message: "Error al actualizar usuario!",
+                        errors: err,
+                    });
+                }
+
+                usuarioGuardado.password = ":)";
+
+                //201=>Created
+                return response.status(200).json({
+                    ok: true,
+                    usuario: usuarioGuardado,
+                });
             });
         });
-    });
-});
+    }
+);
 
 ///===============================================
 /// Crear usuario
@@ -123,30 +126,33 @@ app.post("/", (request, response) => {
 ///===============================================
 /// Borrar usuario
 ///===============================================
-app.delete("/:id", mdAutenticacion.verificaToken, (request, response) => {
-    var id = request.params.id;
-    Usuario.findByIdAndDelete(id, (err, usuarioBorrado) => {
-        if (err) {
-            return response.status(500).json({
-                ok: true,
-                message: "Error al borrar usuario!",
-                errors: err,
-            });
-        }
+app.delete(
+    "/:id", [mdAutenticacion.verificaToken, mdAutenticacion.verificaAdminRole],
+    (request, response) => {
+        var id = request.params.id;
+        Usuario.findByIdAndDelete(id, (err, usuarioBorrado) => {
+            if (err) {
+                return response.status(500).json({
+                    ok: true,
+                    message: "Error al borrar usuario!",
+                    errors: err,
+                });
+            }
 
-        if (!usuarioBorrado) {
-            return response.status(401).json({
-                ok: true,
-                message: "El usuario con el id: " + id + " no existe!",
-                errors: { message: "No existe usuario con ese ID" },
-            });
-        }
+            if (!usuarioBorrado) {
+                return response.status(401).json({
+                    ok: true,
+                    message: "El usuario con el id: " + id + " no existe!",
+                    errors: { message: "No existe usuario con ese ID" },
+                });
+            }
 
-        return response.status(200).json({
-            ok: true,
-            usuario: usuarioBorrado,
+            return response.status(200).json({
+                ok: true,
+                usuario: usuarioBorrado,
+            });
         });
-    });
-});
+    }
+);
 
 module.exports = app;
