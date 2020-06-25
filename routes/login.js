@@ -3,6 +3,9 @@ var bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 var SEED = require("../config/config").SEED;
 
+//Middlewares
+var mdAutenticacion = require("../middlewares/autenticacion");
+
 var app = express();
 
 var Usuario = require("../models/usuario");
@@ -10,6 +13,7 @@ var Usuario = require("../models/usuario");
 //Google
 var CLIENT_ID = require("../config/config").CLIENT_ID;
 const { OAuth2Client } = require("google-auth-library");
+const { request } = require("./usuario");
 const client = new OAuth2Client(CLIENT_ID);
 
 //Routes
@@ -66,8 +70,8 @@ app.post("/google", async(request, response) => {
                 usuarioDB.password = ":)";
                 usuarioDB.imagen = googleUser.imagen;
                 var token = jwt.sign({ usuario: usuarioDB }, SEED, {
-                    expiresIn: 1800,
-                }); //30 mins
+                    expiresIn: 14400,
+                }); //4 horas
 
                 //el token se puede validar en jwt.io
                 return response.status(200).json({
@@ -98,8 +102,8 @@ app.post("/google", async(request, response) => {
                 }
 
                 var token = jwt.sign({ usuario: usuarioBD }, SEED, {
-                    expiresIn: 1800,
-                }); //30 mins
+                    expiresIn: 14400,
+                }); //4 horas
 
                 //el token se puede validar en jwt.io
                 return response.status(200).json({
@@ -148,8 +152,8 @@ app.post("/", (request, response) => {
         //Crear token
         usuarioBD.password = ":)";
         var token = jwt.sign({ usuario: usuarioBD }, SEED, {
-            expiresIn: 1800,
-        }); //30 mins
+            expiresIn: 14400,
+        }); //4 horas
 
         //el token se puede validar en jwt.io
         return response.status(200).json({
@@ -159,6 +163,20 @@ app.post("/", (request, response) => {
             token: token,
             menu: obetnerMenu(usuarioBD.role),
         });
+    });
+});
+
+///===============================================
+/// Renovar Token
+///===============================================
+app.get('/renuevatoken', mdAutenticacion.verificaToken, (request, response) => {
+    var token = jwt.sign({ usuario: request.usuario }, SEED, {
+        expiresIn: 14400,
+    }); //4 horas
+
+    return response.status(200).json({
+        ok: true,
+        token: token,
     });
 });
 
